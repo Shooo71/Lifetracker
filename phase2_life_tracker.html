@@ -1,0 +1,2092 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  html, body { background: #0B0B0C; margin: 0; padding: 0; }
+
+  #food-root {
+    --ink: #F2F2F0;
+    --paper: #0B0B0C;
+    --paper-raised: #18181B;
+    --line: #333338;
+    --copper: #E08A52;
+    --teal: #4FAF9C;
+    --gold: #D9AC52;
+    --muted: #9CA0A6;
+    --danger: #E2695C;
+    --input-bg: #EDEDE7;
+    --input-text: #14151A;
+    --table-bg: #FFFFFF;
+    --table-text: #14151A;
+    --table-line: #D7DCD9;
+    --table-muted: #6B7680;
+
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    padding: 26px 24px 36px;
+    max-width: 780px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+  #food-root * { box-sizing: border-box; }
+  #food-root .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  #food-root .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--copper); margin-bottom: 4px;
+  }
+  #food-root h1 {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 24px;
+    margin: 0 0 4px; letter-spacing: -0.01em;
+  }
+  #food-root .subhead { font-size: 12.5px; color: var(--muted); margin-bottom: 20px; }
+
+  #food-root .card {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    padding: 18px 20px;
+    margin-bottom: 16px;
+  }
+  #food-root .card-title {
+    font-family: 'Fraunces', serif; font-size: 14.5px; font-weight: 600;
+    margin: 0 0 12px; display: flex; justify-content: space-between; align-items: baseline;
+  }
+  #food-root .tag {
+    font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: var(--muted);
+    text-transform: uppercase; font-weight: 400; letter-spacing: 0.05em;
+  }
+
+  #food-root .daybar { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  #food-root .field { display: flex; flex-direction: column; gap: 4px; }
+  #food-root label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  #food-root input, #food-root select {
+    font-family: 'Inter', sans-serif; font-size: 13.5px;
+    padding: 8px 10px; border: 1px solid var(--line); background: var(--input-bg);
+    color: var(--input-text); border-radius: 2px;
+  }
+  #food-root input:focus, #food-root select:focus { outline: 2px solid var(--teal); outline-offset: -1px; }
+  #food-root input[type="checkbox"] { accent-color: var(--teal); background: none; }
+  #food-root textarea {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+    padding: 8px 10px; border: 1px solid var(--line); background: var(--input-bg);
+    color: var(--input-text); border-radius: 2px; width: 100%; box-sizing: border-box;
+  }
+  #food-root textarea:focus { outline: 2px solid var(--teal); outline-offset: -1px; }
+  #food-root .checkline { display: flex; align-items: center; gap: 6px; font-size: 12.5px; }
+  #food-root .checkline input { width: auto; padding: 0; }
+  #food-root .field.narrow { max-width: 78px; }
+  #food-root .field.narrow input { width: 78px; }
+
+  #food-root .add-row { display: grid; grid-template-columns: 2fr 1fr auto; gap: 10px; align-items: end; }
+  #food-root button.primary {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.06em;
+    text-transform: uppercase; background: var(--ink); color: var(--paper-raised);
+    border: none; padding: 10px 16px; cursor: pointer;
+  }
+  #food-root button.primary:hover { background: var(--teal); }
+  #food-root button.ghost {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase;
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    padding: 4px 9px; cursor: pointer;
+  }
+  #food-root button.ghost:hover { border-color: var(--danger); color: var(--danger); }
+
+  #food-root table {
+    width: 100%; border-collapse: collapse; font-size: 12.5px;
+    background: var(--table-bg); color: var(--table-text);
+    border-radius: 3px; overflow: hidden;
+  }
+  #food-root th {
+    font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--table-muted); text-align: left; padding: 6px 8px;
+    border-bottom: 1px solid var(--table-line); background: var(--table-bg);
+  }
+  #food-root td { padding: 7px 8px; border-bottom: 1px solid var(--table-line); color: var(--table-text); }
+  #food-root td.num { font-family: 'IBM Plex Mono', monospace; }
+  #food-root .empty-note { font-size: 12px; color: var(--table-muted); font-style: italic; padding: 10px 8px; }
+
+  #food-root .totals-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--line); border: 1px solid var(--line);
+  }
+  #food-root .total-cell { background: var(--paper-raised); padding: 12px 14px; }
+  #food-root .total-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+  }
+  #food-root .total-value { font-family: 'Fraunces', serif; font-size: 21px; font-weight: 500; }
+  #food-root .total-value.protein { color: var(--teal); }
+  #food-root .total-value.carbs { color: var(--gold); }
+  #food-root .total-value.fat { color: var(--copper); }
+
+  #food-root .deficit-banner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 20px; border: 1px solid var(--line); background: var(--paper-raised);
+  }
+  #food-root .deficit-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  #food-root .deficit-value { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 500; }
+  #food-root .deficit-value.pos { color: var(--teal); }
+  #food-root .deficit-value.neg { color: var(--danger); }
+  #food-root .deficit-sub { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--muted); margin-top: 4px; }
+
+  #food-root .status-msg { font-family: 'IBM Plex Mono', monospace; font-size: 11px; margin-top: 8px; color: var(--teal); min-height: 14px; }
+
+  #food-root .tabs { display: flex; gap: 2px; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
+  #food-root .tab {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 10px 16px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent;
+    background: none; border-top: none; border-left: none; border-right: none;
+  }
+  #food-root .tab.active { color: var(--ink); border-bottom-color: var(--copper); }
+  #food-root .panel { display: none; }
+  #food-root .panel.active { display: block; }
+
+  @media (max-width: 640px) {
+    #food-root .totals-grid { grid-template-columns: repeat(2, 1fr); }
+    #food-root .add-row { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div id="food-root">
+  <div class="eyebrow" id="header-eyebrow">Phase 2 Life Tracker</div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="dashboard">Dashboard</button>
+    <button class="tab" data-tab="weighin">Weigh-in</button>
+    <button class="tab" data-tab="workout">Workout</button>
+    <button class="tab" data-tab="log">Food</button>
+    <button class="tab" data-tab="health">Health</button>
+    <button class="tab" data-tab="work">Work</button>
+  </div>
+
+  <div class="panel" id="panel-log">
+  <div class="card">
+    <div class="daybar">
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="ff-date">
+      </div>
+      <div class="field" style="justify-content:flex-end;">
+        <div class="checkline"><input type="checkbox" id="ff-fasting"> 18:6 fasting window observed</div>
+      </div>
+      <div class="field" style="justify-content:flex-end;">
+        <div class="checkline"><input type="checkbox" id="ff-training"> Training day (affects TDEE)</div>
+      </div>
+      <div class="field" style="margin-left:auto;">
+        <button class="ghost" id="btn-load-day">Load this date</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Add item</div>
+    <div class="add-row">
+      <div class="field">
+        <label>Food</label>
+        <select id="ff-item"></select>
+      </div>
+      <div class="field">
+        <label id="ff-qty-label">Servings</label>
+        <input type="number" step="1" id="ff-qty" value="1" min="0">
+      </div>
+      <button class="primary" id="btn-add-item">Add</button>
+    </div>
+    <div id="custom-fields" style="display:none; margin-top:12px;">
+      <div class="add-row" style="grid-template-columns: 2fr 1fr 1fr 1fr 1fr;">
+        <div class="field">
+          <label>Description</label>
+          <input type="text" id="cf-desc" placeholder="e.g. Restaurant burger">
+        </div>
+        <div class="field">
+          <label>Kcal</label>
+          <input type="number" id="cf-kcal" value="0">
+        </div>
+        <div class="field">
+          <label>Protein (g)</label>
+          <input type="number" id="cf-protein" value="0">
+        </div>
+        <div class="field">
+          <label>Carbs (g)</label>
+          <input type="number" id="cf-carbs" value="0">
+        </div>
+        <div class="field">
+          <label>Fat (g)</label>
+          <input type="number" id="cf-fat" value="0">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Logged today <span class="tag" id="item-count-tag">0 items</span></div>
+    <table id="log-table"></table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Running totals</div>
+    <div class="totals-grid">
+      <div class="total-cell">
+        <div class="total-label">Calories</div>
+        <div class="total-value" id="t-kcal">0</div>
+      </div>
+      <div class="total-cell">
+        <div class="total-label">Protein</div>
+        <div class="total-value protein" id="t-protein">0g</div>
+      </div>
+      <div class="total-cell">
+        <div class="total-label">Carbs</div>
+        <div class="total-value carbs" id="t-carbs">0g</div>
+      </div>
+      <div class="total-cell">
+        <div class="total-label">Fat</div>
+        <div class="total-value fat" id="t-fat">0g</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="deficit-banner">
+      <div>
+        <div class="deficit-label">Calorie balance</div>
+        <div class="deficit-sub" id="tdee-note">TDEE est. —</div>
+      </div>
+      <div>
+        <div class="deficit-value" id="deficit-value">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <button class="primary" id="btn-save-day">Save day</button>
+    <div class="status-msg" id="save-status"></div>
+  </div>
+  </div>
+
+  <div class="panel" id="panel-weighin">
+    <div class="card">
+      <div class="daybar">
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="wi-date">
+        </div>
+        <button class="ghost" id="btn-load-weighin">Load this date</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Morning statistics</div>
+      <div class="totals-grid">
+        <div class="total-cell">
+          <div class="total-label">Weight (kg)</div>
+          <input type="number" step="0.1" id="wi-weight" placeholder="e.g. 94.9" style="font-family:'Fraunces',serif; font-size:21px; border:none; background:transparent; padding:0; width:100%;">
+        </div>
+        <div class="total-cell">
+          <div class="total-label">Body fat (%)</div>
+          <input type="number" step="0.1" id="wi-bf" placeholder="e.g. 16.9" style="font-family:'Fraunces',serif; font-size:21px; border:none; background:transparent; padding:0; width:100%; color:var(--copper);">
+        </div>
+        <div class="total-cell">
+          <div class="total-label">Muscle (kg)</div>
+          <input type="number" step="0.1" id="wi-muscle" placeholder="e.g. 75.0" style="font-family:'Fraunces',serif; font-size:21px; border:none; background:transparent; padding:0; width:100%; color:var(--teal);">
+        </div>
+        <div class="total-cell">
+          <div class="total-label">Water (%)</div>
+          <input type="number" step="0.1" id="wi-water" placeholder="e.g. 55.4" style="font-family:'Fraunces',serif; font-size:21px; border:none; background:transparent; padding:0; width:100%; color:var(--gold);">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <button class="primary" id="btn-save-weighin">Save weigh-in</button>
+      <div class="status-msg" id="weighin-status"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Recent entries</div>
+      <table id="weighin-table"></table>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-workout">
+    <div class="card">
+      <div class="daybar">
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="wk-date">
+        </div>
+        <button class="ghost" id="btn-load-workout">Load this date</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Add set</div>
+      <div class="add-row" style="grid-template-columns: 2fr auto; align-items:end;">
+        <div class="field">
+          <label>Exercise</label>
+          <select id="wk-item"></select>
+        </div>
+        <button class="primary" id="btn-add-set">Add</button>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+        <div class="field narrow wk-field-setsreps">
+          <label>Sets</label>
+          <input type="number" min="1" step="1" value="1" id="wk-sets">
+        </div>
+        <div class="field narrow wk-field-setsreps">
+          <label>Reps</label>
+          <input type="number" min="0" step="1" id="wk-reps">
+        </div>
+        <div class="field narrow wk-field-bodyweight" style="display:none; justify-content:flex-end; padding-bottom:8px;">
+          <div class="checkline"><input type="checkbox" id="wk-bodyweight" checked> Bodyweight</div>
+        </div>
+        <div class="field narrow wk-field-weight">
+          <label id="wk-weight-label">Weight (kg)</label>
+          <input type="number" min="0" step="0.5" id="wk-weight">
+        </div>
+        <div class="field wk-field-mods" style="display:none; flex-direction:row; gap:12px; align-items:center; padding-bottom:8px;">
+          <div class="checkline"><input type="checkbox" id="wk-mod-rings"> Rings</div>
+          <div class="checkline"><input type="checkbox" id="wk-mod-decline"> Decline</div>
+          <div class="checkline"><input type="checkbox" id="wk-mod-parallettes"> Parallettes</div>
+        </div>
+        <div class="field narrow wk-field-distance" style="display:none;">
+          <label>Distance (km)</label>
+          <input type="number" min="0" step="0.1" id="wk-km">
+        </div>
+        <div class="field wk-field-hiit" style="display:none; flex:1; min-width:180px;">
+          <label>Description</label>
+          <input type="text" id="wk-hiit-desc" placeholder="e.g. 4RFT 15cal skiers + 15 KBS@32kg">
+        </div>
+        <div class="field narrow wk-field-hiit" style="display:none;">
+          <label>Time (min)</label>
+          <input type="number" min="0" step="1" id="wk-hiit-time">
+        </div>
+      </div>
+    </div>
+
+
+    <div class="card">
+      <div class="card-title">Logged sets <span class="tag" id="wk-count-tag">0 sets</span></div>
+      <table id="wk-log-table"></table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Exercise totals</div>
+      <table id="wk-totals-table"></table>
+    </div>
+    <div class="card">
+      <button class="primary" id="btn-save-workout">Save workout</button>
+      <div class="status-msg" id="workout-status"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-health">
+    <div class="card">
+      <div class="daybar">
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="hl-date">
+        </div>
+        <button class="ghost" id="btn-load-health">Load this date</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Daily activities</div>
+      <div id="health-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+
+    <div class="card">
+      <button class="primary" id="btn-save-health">Save day</button>
+      <div class="status-msg" id="health-status"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-work">
+    <div class="card">
+      <div class="daybar">
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="wr-date">
+        </div>
+        <button class="ghost" id="btn-load-work">Load this date</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Allocated time (hours)</div>
+      <div id="work-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+
+    <div class="card">
+      <button class="primary" id="btn-save-work">Save day</button>
+      <div class="status-msg" id="work-status"></div>
+    </div>
+
+    <div class="card">
+      <div class="daybar">
+        <div class="field">
+          <label>Month</label>
+          <input type="month" id="wr-month">
+        </div>
+        <button class="ghost" id="btn-load-work-month">Refresh</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Monthly totals <span class="tag" id="work-month-tag">0 days logged</span></div>
+      <table id="work-month-table"></table>
+    </div>
+  </div>
+
+  <div class="panel active" id="panel-dashboard">
+    <div class="card">
+      <div class="card-title">Data import</div>
+      <div style="font-size:12.5px; color:var(--muted); margin-bottom:10px;">One-time restore of everything logged so far: Phase 1 weigh-ins (May 19 – Jul 1), the DEXA baseline, and Phase 2 data through Jul 15. Safe to run more than once — it overwrites with the same values.</div>
+      <button class="ghost" id="btn-restore-history">Restore full history</button>
+      <div class="status-msg" id="restore-status"></div>
+    </div>
+
+    <div class="card">
+      <div class="daybar">
+        <div class="field">
+          <label>Month</label>
+          <input type="month" id="db-month">
+        </div>
+        <button class="ghost" id="btn-load-month">Refresh</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Macro split <span class="tag" id="db-days-tag">0 days logged</span></div>
+      <div class="totals-grid">
+        <div class="total-cell">
+          <div class="total-label">Protein % of kcal</div>
+          <div class="total-value protein" id="db-protein-pct">—</div>
+        </div>
+        <div class="total-cell">
+          <div class="total-label">Carbs % of kcal</div>
+          <div class="total-value carbs" id="db-carbs-pct">—</div>
+        </div>
+        <div class="total-cell">
+          <div class="total-label">Fat % of kcal</div>
+          <div class="total-value fat" id="db-fat-pct">—</div>
+        </div>
+        <div class="total-cell">
+          <div class="total-label">Avg kcal/day</div>
+          <div class="total-value" id="db-avg-kcal">—</div>
+        </div>
+      </div>
+      <div style="margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--muted);" id="db-macro-grams-line">By grams: —</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Weight Trend <span class="tag">all logged weigh-ins</span></div>
+      <canvas id="db-weight-chart" height="90"></canvas>
+    </div>
+
+    <div class="card">
+      <div class="deficit-banner">
+        <div>
+          <div class="deficit-label">Cumulative deficit / surplus</div>
+          <div class="deficit-sub" id="db-deficit-note">—</div>
+        </div>
+        <div>
+          <div class="deficit-value" id="db-deficit-value">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Fasting adherence</div>
+      <div class="totals-grid" style="grid-template-columns: repeat(2, 1fr);">
+        <div class="total-cell">
+          <div class="total-label">18:6 days logged</div>
+          <div class="total-value" id="db-fasting-days">—</div>
+        </div>
+        <div class="total-cell">
+          <div class="total-label">Of days tracked</div>
+          <div class="total-value" id="db-fasting-total">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Workout Adherence <span class="tag" id="db-workout-days-tag">—</span></div>
+      <div class="totals-grid" style="grid-template-columns: repeat(2, 1fr);">
+        <div class="total-cell">
+          <div class="total-label">Days with a workout logged</div>
+          <div class="total-value" id="db-workout-days">—</div>
+        </div>
+        <div class="total-cell">
+          <div class="total-label">% of month</div>
+          <div class="total-value" id="db-workout-pct">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Work Hours by Category</div>
+      <canvas id="db-work-chart" height="90"></canvas>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Export data</div>
+      <div style="font-size:12.5px; color:var(--muted); margin-bottom:10px;">Compile the selected month above into a spreadsheet, or export everything ever logged as a full backup. Use this to hand your data to Claude for reports, since Claude can't read this widget's storage directly.</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="ghost" id="btn-export-month-csv">Export month as CSV</button>
+        <button class="ghost" id="btn-export-all-json">Export full backup (JSON)</button>
+      </div>
+      <div class="status-msg" id="export-status"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Import backup</div>
+      <div style="font-size:12.5px; color:var(--muted); margin-bottom:10px;">Paste the contents of a "full backup (JSON)" export below to restore it into this tracker instance — use this when moving to a new chat, since storage doesn't carry over automatically.</div>
+      <textarea id="import-json-text" rows="4" placeholder='Paste full backup JSON here (starts with { "weigh-in:2026-..." : ... })'></textarea>
+      <button class="ghost" id="btn-import-backup" style="margin-top:8px;">Import backup</button>
+      <div class="status-msg" id="import-status"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const BMR = 2000;
+  // Charts always render on a white background with black axis/text, per design spec —
+  // independent of the app's dark theme, and using saturated colors for contrast on white.
+  const CHART_BG = '#FFFFFF';
+  const CHART_TEXT = '#14151A';
+  const CHART_GRID = '#D7DCD9';
+  const CHART_LINE = '#2F6F62';
+  const CHART_BAR = '#C1662F';
+  const CHART_GOAL_BAND = 'rgba(185,138,46,0.15)';
+  const CHART_GOAL_LINE = 'rgba(185,138,46,0.45)';
+  const REST_MULT = 1.3;
+  const TRAIN_MULT = 1.55;
+
+  const FOOD_DB = {
+    oatmeal:  { label: 'Oatmeal (1dl oats + 1 tbsp lingonberry jam)', type: 'fixed', unitLabel: 'serving', kcal: 175, protein: 5,  carbs: 33, fat: 3 },
+    coffee:   { label: 'Coffee with oat milk',                        type: 'fixed', unitLabel: 'cup',     kcal: 20,  protein: 0,  carbs: 2,  fat: 1 },
+    eggs:     { label: 'Scrambled eggs',                               type: 'fixed', unitLabel: 'egg',     kcal: 70,  protein: 6,  carbs: 1,  fat: 5 },
+    salad:    { label: 'Mixed green salad',                            type: 'per100g', kcal: 20,  protein: 1.5, carbs: 1.5, fat: 0.2 },
+    veal:     { label: 'Veal fillet (cooked, olive oil/butter)',       type: 'per100g', kcal: 176, protein: 31,  carbs: 0,   fat: 6 },
+    chicken:  { label: 'Chicken breast (cooked, olive oil/butter)',    type: 'per100g', kcal: 170, protein: 31,  carbs: 0,   fat: 5 },
+    salmon:   { label: 'Salmon (cooked, olive oil/butter)',            type: 'per100g', kcal: 230, protein: 23,  carbs: 0,   fat: 15 },
+    bar:      { label: 'Protein bar (Barebells Peanut Butter)',        type: 'fixed', unitLabel: 'bar',     kcal: 220, protein: 20, carbs: 3,  fat: 14 },
+    smoothie: { label: 'Smoothie (blueberry, olive oil, whey, creatine, rosehip)', type: 'fixed', unitLabel: 'smoothie', kcal: 390, protein: 38, carbs: 17, fat: 17 },
+    cream:    { label: 'Cooking cream (0.4dl)',                        type: 'fixed', unitLabel: '0.4dl serving', kcal: 150, protein: 1, carbs: 1, fat: 15 },
+    wheyshake:{ label: 'Whey shake (1dl whey protein powder)',         type: 'fixed', unitLabel: 'shake',   kcal: 190, protein: 37, carbs: 4, fat: 3 },
+    wheystrawberry: { label: 'Whey strawberry (1dl = 50g)',            type: 'fixed', unitLabel: 'shake',   kcal: 185, protein: 35, carbs: 2, fat: 3 },
+    avocado:  { label: 'Avocado (0.5 unit = half an avocado)',         type: 'fixed', unitLabel: '0.5 avocado', kcal: 120, protein: 1.5, carbs: 2, fat: 11 },
+    chips:    { label: 'Chips',                                        type: 'per100g', kcal: 535, protein: 6, carbs: 50, fat: 33 },
+    custom:   { label: 'Custom item (type it in)',                     type: 'custom' }
+  };
+
+  let currentItems = [];
+  let cachedWorkoutDate = null;
+  let cachedWorkoutRecord = null;
+
+  async function refreshWorkoutCacheForDate(date) {
+    cachedWorkoutDate = date;
+    cachedWorkoutRecord = await fetchWorkoutRecord(date);
+    renderTotals();
+  }
+
+  function todayStr() { return new Date().toISOString().slice(0, 10); }
+
+  function populateSelect() {
+    const sel = document.getElementById('ff-item');
+    sel.innerHTML = Object.keys(FOOD_DB).map(key => `<option value="${key}">${FOOD_DB[key].label}</option>`).join('');
+    updateQtyLabel();
+  }
+
+  function updateQtyLabel() {
+    const key = document.getElementById('ff-item').value;
+    const item = FOOD_DB[key];
+    const label = document.getElementById('ff-qty-label');
+    const qtyInput = document.getElementById('ff-qty');
+    const customFields = document.getElementById('custom-fields');
+    const qtyField = qtyInput.closest('.field');
+
+    if (item.type === 'custom') {
+      qtyField.style.display = 'none';
+      customFields.style.display = 'block';
+      return;
+    }
+    qtyField.style.display = '';
+    customFields.style.display = 'none';
+
+    if (item.type === 'per100g') {
+      label.textContent = 'Grams';
+      qtyInput.step = '5';
+      qtyInput.value = 100;
+    } else {
+      label.textContent = 'Servings (' + item.unitLabel + ')';
+      qtyInput.step = '1';
+      qtyInput.value = 1;
+    }
+  }
+
+  function computeMacros(key, qty) {
+    const item = FOOD_DB[key];
+    const mult = item.type === 'per100g' ? (qty / 100) : qty;
+    return {
+      kcal: Math.round(item.kcal * mult),
+      protein: Math.round(item.protein * mult * 10) / 10,
+      carbs: Math.round(item.carbs * mult * 10) / 10,
+      fat: Math.round(item.fat * mult * 10) / 10
+    };
+  }
+
+  function tdeeFor(isTraining) {
+    return Math.round(BMR * (isTraining ? TRAIN_MULT : REST_MULT));
+  }
+
+  // ---- Activity-based calorie estimation ----
+  // Rough kcal cost per logged unit, calibrated for a ~95kg lifter. These are estimates,
+  // not lab measurements — compound/lower-body lifts cost more per set than isolation work.
+  const ACTIVITY_BASELINE_MULT = 1.2; // non-exercise daily living (NEAT), workout kcal added on top
+  const EXERCISE_KCAL = {
+    backsquat:     { perSet: 14 },
+    deadlift:      { perSet: 15 },
+    row:           { perSet: 9 },
+    bicepHandle:   { perSet: 5 },
+    bicepRope:     { perSet: 5 },
+    tricepRope:    { perSet: 5 },
+    tricepBar:     { perSet: 5 },
+    pullup:        { perSet: 8 },
+    chinup:        { perSet: 8 },
+    cablePullDown: { perSet: 8 },
+    rearDelt:      { perSet: 5 },
+    legPress:      { perSet: 12 },
+    backExt:       { perSet: 6 },
+    pushup:        { perSet: 7 },
+    kbSwing:       { perSet: 10 },
+    walk:          { perKm: 65 },
+    hiit:          { perMin: 15 }
+  };
+
+  function computeWorkoutKcal(workoutRecord) {
+    if (!workoutRecord || !workoutRecord.exercises) return 0;
+    let total = 0;
+    Object.keys(workoutRecord.exercises).forEach(key => {
+      const entries = workoutRecord.exercises[key] || [];
+      const factor = EXERCISE_KCAL[key];
+      if (!factor || !entries.length) return;
+      entries.forEach(e => {
+        if (factor.perSet !== undefined) total += factor.perSet * (e.sets || 0);
+        else if (factor.perKm !== undefined) total += factor.perKm * (e.km || 0);
+        else if (factor.perMin !== undefined) total += factor.perMin * (e.minutes || 0);
+      });
+    });
+    return total;
+  }
+
+  function workoutHasEntries(workoutRecord) {
+    return !!(workoutRecord && workoutRecord.exercises &&
+      Object.values(workoutRecord.exercises).some(arr => arr && arr.length > 0));
+  }
+
+  // Computes a day's TDEE from its actual logged workout when available;
+  // falls back to the old rest/training multiplier when no workout is logged for that date.
+  function computeDayTdee(workoutRecord, isTrainingFallback) {
+    if (workoutHasEntries(workoutRecord)) {
+      const activityKcal = computeWorkoutKcal(workoutRecord);
+      return {
+        tdee: Math.round(BMR * ACTIVITY_BASELINE_MULT + activityKcal),
+        source: 'activity',
+        activityKcal: Math.round(activityKcal)
+      };
+    }
+    return { tdee: tdeeFor(isTrainingFallback), source: 'estimate', activityKcal: 0 };
+  }
+
+  async function fetchWorkoutRecord(date) {
+    return await getDayFromMonthBlob('workout-month:', date);
+  }
+
+  function renderTable() {
+    const el = document.getElementById('log-table');
+    document.getElementById('item-count-tag').textContent = currentItems.length + (currentItems.length === 1 ? ' item' : ' items');
+    if (!currentItems.length) {
+      el.innerHTML = '<tr><td class="empty-note">Nothing logged yet — add an item above.</td></tr>';
+      return;
+    }
+    let html = '<tr><th>Item</th><th>Qty</th><th>Kcal</th><th>P</th><th>C</th><th>F</th><th></th></tr>';
+    currentItems.forEach((it, idx) => {
+      const item = FOOD_DB[it.key];
+      const displayLabel = it.key === 'custom' ? (it.label || 'Custom item') : item.label;
+      const qtyDisplay = it.key === 'custom' ? '—' : (item.type === 'per100g' ? it.qty + 'g' : it.qty + 'x');
+      html += `<tr>
+        <td>${displayLabel}</td>
+        <td class="num">${qtyDisplay}</td>
+        <td class="num">${it.kcal}</td>
+        <td class="num">${it.protein}g</td>
+        <td class="num">${it.carbs}g</td>
+        <td class="num">${it.fat}g</td>
+        <td><button class="ghost" data-idx="${idx}" onclick="window.__foodRemove(${idx})">remove</button></td>
+      </tr>`;
+    });
+    el.innerHTML = html;
+  }
+
+  function renderTotals() {
+    const totals = currentItems.reduce((acc, it) => ({
+      kcal: acc.kcal + it.kcal,
+      protein: acc.protein + it.protein,
+      carbs: acc.carbs + it.carbs,
+      fat: acc.fat + it.fat
+    }), { kcal: 0, protein: 0, carbs: 0, fat: 0 });
+
+    document.getElementById('t-kcal').textContent = Math.round(totals.kcal);
+    document.getElementById('t-protein').textContent = Math.round(totals.protein) + 'g';
+    document.getElementById('t-carbs').textContent = Math.round(totals.carbs) + 'g';
+    document.getElementById('t-fat').textContent = Math.round(totals.fat) + 'g';
+
+    const isTraining = document.getElementById('ff-training').checked;
+    const date = document.getElementById('ff-date').value;
+    const workoutRec = (cachedWorkoutDate === date) ? cachedWorkoutRecord : null;
+    const { tdee, source, activityKcal } = computeDayTdee(workoutRec, isTraining);
+    const balance = tdee - totals.kcal;
+    const valEl = document.getElementById('deficit-value');
+    const noteEl = document.getElementById('tdee-note');
+    noteEl.textContent = source === 'activity'
+      ? `TDEE est. ${tdee} kcal (BMR baseline + ${activityKcal} kcal from logged workout)`
+      : `TDEE est. ${tdee} kcal (${isTraining ? 'training day, x1.55' : 'rest day, x1.3'} estimate — no workout logged for this date yet)`;
+    if (balance >= 0) {
+      valEl.textContent = '−' + Math.round(balance) + ' kcal deficit';
+      valEl.className = 'deficit-value pos';
+    } else {
+      valEl.textContent = '+' + Math.round(Math.abs(balance)) + ' kcal surplus';
+      valEl.className = 'deficit-value neg';
+    }
+    return totals;
+  }
+
+  window.__foodRemove = function(idx) {
+    currentItems.splice(idx, 1);
+    renderTable();
+    renderTotals();
+  };
+
+  function setupAdd() {
+    document.getElementById('ff-item').addEventListener('change', updateQtyLabel);
+    document.getElementById('btn-add-item').addEventListener('click', () => {
+      const key = document.getElementById('ff-item').value;
+      const item = FOOD_DB[key];
+
+      if (item.type === 'custom') {
+        const desc = document.getElementById('cf-desc').value.trim();
+        if (!desc) { document.getElementById('save-status').textContent = 'Enter a description for the custom item.'; return; }
+        const kcal = parseFloat(document.getElementById('cf-kcal').value) || 0;
+        const protein = parseFloat(document.getElementById('cf-protein').value) || 0;
+        const carbs = parseFloat(document.getElementById('cf-carbs').value) || 0;
+        const fat = parseFloat(document.getElementById('cf-fat').value) || 0;
+        currentItems.push({ key: 'custom', label: desc, qty: 1, kcal, protein, carbs, fat });
+        document.getElementById('cf-desc').value = '';
+        document.getElementById('cf-kcal').value = 0;
+        document.getElementById('cf-protein').value = 0;
+        document.getElementById('cf-carbs').value = 0;
+        document.getElementById('cf-fat').value = 0;
+        renderTable();
+        renderTotals();
+        return;
+      }
+
+      const qty = parseFloat(document.getElementById('ff-qty').value);
+      if (!qty || qty <= 0) return;
+      const macros = computeMacros(key, qty);
+      currentItems.push({ key, qty, ...macros });
+      renderTable();
+      renderTotals();
+    });
+    document.getElementById('ff-training').addEventListener('change', renderTotals);
+  }
+
+  async function restoreFullHistory() {
+    const statusEl = document.getElementById('restore-status');
+    statusEl.textContent = 'Restoring full history...';
+
+    function itemFrom(key, qty) {
+      const m = computeMacros(key, qty);
+      return { key, qty, ...m };
+    }
+    function customItem(label, kcal, protein, carbs, fat) {
+      return { key: 'custom', label, qty: 1, kcal, protein, carbs, fat };
+    }
+    function sumTotals(items) {
+      return items.reduce((acc, it) => ({
+        kcal: acc.kcal + it.kcal, protein: acc.protein + it.protein,
+        carbs: acc.carbs + it.carbs, fat: acc.fat + it.fat
+      }), { kcal: 0, protein: 0, carbs: 0, fat: 0 });
+    }
+
+    let weighInCount = 0, foodCount = 0, workoutCount = 0, workCount = 0, healthCount = 0;
+
+    // ---- Phase 1 archive weigh-ins (2026-05-19 through 2026-07-01) ----
+    const phase1Weighins = [
+      {"date":"2026-05-19","weight":99.9,"bf":23.0,"muscle":null,"hydration":51.0},
+      {"date":"2026-05-20","weight":99.8,"bf":23.0,"muscle":null,"hydration":50.9},
+      {"date":"2026-05-21","weight":99.3,"bf":23.0,"muscle":null,"hydration":50.8},
+      {"date":"2026-05-22","weight":99.0,"bf":23.0,"muscle":null,"hydration":50.8},
+      {"date":"2026-05-23","weight":98.5,"bf":23.0,"muscle":null,"hydration":51.0},
+      {"date":"2026-05-24","weight":97.8,"bf":22.5,"muscle":null,"hydration":51.4},
+      {"date":"2026-05-25","weight":97.9,"bf":22.3,"muscle":null,"hydration":51.2},
+      {"date":"2026-05-26","weight":97.2,"bf":22.7,"muscle":null,"hydration":51.0},
+      {"date":"2026-05-27","weight":96.6,"bf":22.7,"muscle":71.0,"hydration":50.9},
+      {"date":"2026-05-28","weight":95.2,"bf":23.7,"muscle":68.4,"hydration":50.1},
+      {"date":"2026-05-29","weight":94.3,"bf":24.0,"muscle":68.1,"hydration":49.0},
+      {"date":"2026-05-30","weight":94.2,"bf":24.0,"muscle":null,"hydration":49.0},
+      {"date":"2026-05-31","weight":94.9,"bf":23.5,"muscle":null,"hydration":50.2},
+      {"date":"2026-06-01","weight":95.0,"bf":23.4,"muscle":69.8,"hydration":50.7},
+      {"date":"2026-06-02","weight":94.8,"bf":22.8,"muscle":69.2,"hydration":50.4},
+      {"date":"2026-06-03","weight":94.2,"bf":23.2,"muscle":68.8,"hydration":50.3},
+      {"date":"2026-06-04","weight":94.2,"bf":23.2,"muscle":68.8,"hydration":50.3},
+      {"date":"2026-06-05","weight":94.0,"bf":null,"muscle":null,"hydration":null},
+      {"date":"2026-06-06","weight":94.0,"bf":null,"muscle":null,"hydration":54.1},
+      {"date":"2026-06-09","weight":96.6,"bf":17.0,"muscle":74.1,"hydration":55.3},
+      {"date":"2026-06-10","weight":96.9,"bf":17.1,"muscle":76.4,"hydration":55.4},
+      {"date":"2026-06-11","weight":96.8,"bf":17.1,"muscle":76.4,"hydration":55.3},
+      {"date":"2026-06-12","weight":97.2,"bf":16.4,"muscle":77.2,"hydration":55.8},
+      {"date":"2026-06-13","weight":96.8,"bf":16.5,"muscle":76.8,"hydration":55.8},
+      {"date":"2026-06-14","weight":96.0,"bf":16.7,"muscle":76.0,"hydration":55.6},
+      {"date":"2026-06-15","weight":95.2,"bf":17.9,"muscle":74.6,"hydration":54.6},
+      {"date":"2026-06-16","weight":94.4,"bf":18.1,"muscle":73.6,"hydration":54.6},
+      {"date":"2026-06-17","weight":93.9,"bf":18.5,"muscle":72.8,"hydration":54.0},
+      {"date":"2026-06-18","weight":93.8,"bf":18.0,"muscle":74.0,"hydration":54.0},
+      {"date":"2026-06-22","weight":95.5,"bf":17.5,"muscle":75.0,"hydration":55.0},
+      {"date":"2026-06-23","weight":95.4,"bf":17.1,"muscle":75.2,"hydration":55.2},
+      {"date":"2026-06-24","weight":95.1,"bf":16.5,"muscle":75.5,"hydration":55.7},
+      {"date":"2026-06-25","weight":95.0,"bf":16.6,"muscle":75.4,"hydration":55.6},
+      {"date":"2026-06-26","weight":96.5,"bf":16.9,"muscle":76.2,"hydration":55.4},
+      {"date":"2026-06-30","weight":98.1,"bf":16.7,"muscle":77.6,"hydration":55.6},
+      {"date":"2026-07-01","weight":96.6,"bf":16.7,"muscle":76.6,"hydration":55.6}
+    ];
+    // DEXA scan (2026-06-29) — weight and body fat only; lean mass %/visceral fat don't map to this schema
+    const dexaAsWeighin = {"date":"2026-06-29","weight":97.26,"bf":18.1,"muscle":null,"hydration":null};
+
+    // Group all records by (category, month) so each month only needs ONE write,
+    // instead of one write per day.
+    const blobs = {}; // key: 'weigh-in-month:2026-07' -> { '2026-07-01': {...}, ... }
+    function addToBlob(prefix, date, value) {
+      const monthVal = date.slice(0, 7);
+      const cacheKey = prefix + monthVal;
+      if (!blobs[cacheKey]) blobs[cacheKey] = {};
+      blobs[cacheKey][date] = value;
+    }
+
+    for (const w of [...phase1Weighins, dexaAsWeighin]) {
+      addToBlob('weigh-in-month:', w.date, { date: w.date, weight: w.weight, bf: w.bf, muscle: w.muscle, water: w.hydration });
+      weighInCount++;
+    }
+
+    // ---- 2026-07-01: full itemized food + workout (from chat) ----
+    const items0701 = [
+      itemFrom('bar', 2), itemFrom('smoothie', 1), itemFrom('coffee', 3), itemFrom('wheyshake', 1),
+      itemFrom('chicken', 150), itemFrom('cream', 1), itemFrom('eggs', 4), itemFrom('avocado', 1),
+      customItem('Toast + cherry tomato + olive oil drizzle', 170, 4, 20, 5)
+    ];
+    addToBlob('food-log-month:', '2026-07-01', { date: '2026-07-01', fasting: false, isTrainingDay: true, items: items0701, totals: sumTotals(items0701) });
+    foodCount++;
+    addToBlob('workout-month:', '2026-07-01', { date: '2026-07-01', exercises: Object.assign(emptyWorkoutData(), {
+        backsquat: [{ sets: 1, reps: 6, weight: 80 }, { sets: 3, reps: 5, weight: 80 }],
+        walk: [{ km: 5 }]
+      }) });
+    workoutCount++;
+
+    // ---- 2026-07-02 ----
+    const items0702 = [
+      itemFrom('smoothie', 1), itemFrom('wheyshake', 1), itemFrom('bar', 2), itemFrom('chicken', 120),
+      itemFrom('cream', 1), itemFrom('eggs', 4), itemFrom('salad', 100), itemFrom('coffee', 3)
+    ];
+    addToBlob('food-log-month:', '2026-07-02', { date: '2026-07-02', fasting: false, isTrainingDay: true, items: items0702, totals: sumTotals(items0702) });
+    foodCount++;
+    addToBlob('workout-month:', '2026-07-02', { date: '2026-07-02', exercises: Object.assign(emptyWorkoutData(), {
+        pushup: [{ sets: 2, reps: 30, rings: true, decline: false, parallettes: false }],
+        walk: [{ km: 5 }]
+      }) });
+    workoutCount++;
+
+    // ---- 2026-07-03 ----
+    const items0703 = [
+      itemFrom('bar', 2), itemFrom('smoothie', 1), itemFrom('coffee', 3), itemFrom('wheyshake', 1),
+      itemFrom('veal', 200), itemFrom('salad', 100), customItem('Salad dressing (olive oil based)', 130, 0, 1, 14),
+      itemFrom('oatmeal', 1)
+    ];
+    addToBlob('food-log-month:', '2026-07-03', { date: '2026-07-03', fasting: false, isTrainingDay: true, items: items0703, totals: sumTotals(items0703) });
+    foodCount++;
+    addToBlob('workout-month:', '2026-07-03', { date: '2026-07-03', exercises: Object.assign(emptyWorkoutData(), {
+        deadlift: [{ sets: 2, reps: 6, weight: 120 }, { sets: 2, reps: 3, weight: 130 }],
+        hiit: [{ desc: '4RFT: 15cal skiers + 15 KBS@32kg', minutes: 0 }]
+      }) });
+    workoutCount++;
+
+    // ---- 2026-07-04 (partial day) ----
+    const items0704 = [itemFrom('smoothie', 1), itemFrom('bar', 2), itemFrom('eggs', 4)];
+    addToBlob('food-log-month:', '2026-07-04', { date: '2026-07-04', fasting: false, isTrainingDay: false, items: items0704, totals: sumTotals(items0704) });
+    foodCount++;
+
+    // ---- 2026-07-08 through 07-15: from CSV export (totals only — no itemized detail available) ----
+    const csvDays = [
+      { date: '2026-07-08', kcal: 1779, protein: 189.2, carbs: 67, fat: 80, fasting: true, training: true,
+        health: { supplements: true }, work: { spago: 0.5, futuresTrading: 3, stockPortfolio: 1, personalAdmin: 1 } },
+      { date: '2026-07-09', weight: 92.4, bf: 18.1, muscle: 71.8, water: 53.9,
+        kcal: 2233, protein: 124.5, carbs: 112, fat: 138.5, fasting: true, training: false,
+        health: { supplements: true }, work: { spago: 1.5, futuresTrading: 1.5, stockPortfolio: 1.5, personalAdmin: 1 } },
+      { date: '2026-07-10', weight: 92.3, bf: 17.4, muscle: 74.7, water: 54.7, training: false },
+      { date: '2026-07-14', weight: 95.5, bf: 16.7, muscle: 75.5, water: 55.5,
+        kcal: 1205, protein: 124.5, carbs: 32.5, fat: 61.2, fasting: true, training: false,
+        health: { coldShower: true, deadHang: true } },
+      { date: '2026-07-15', weight: 94.9, bf: 16.3, muscle: 75.6, water: 55.8,
+        kcal: 670, protein: 58, carbs: 26, fat: 34, fasting: true, training: true,
+        work: { personalAdmin: 0.5 } }
+    ];
+
+    for (const d of csvDays) {
+      if (d.weight !== undefined) {
+        addToBlob('weigh-in-month:', d.date, { date: d.date, weight: d.weight, bf: d.bf, muscle: d.muscle, water: d.water });
+        weighInCount++;
+      }
+      if (d.kcal !== undefined) {
+        const item = customItem('Imported daily total (CSV export — itemized detail not available)', d.kcal, d.protein, d.carbs, d.fat);
+        addToBlob('food-log-month:', d.date, { date: d.date, fasting: !!d.fasting, isTrainingDay: !!d.training, items: [item], totals: sumTotals([item]) });
+        foodCount++;
+      }
+      if (d.health) {
+        addToBlob('health-month:', d.date, { date: d.date, activities: d.health });
+        healthCount++;
+      }
+      if (d.work) {
+        addToBlob('work-month:', d.date, { date: d.date, hours: d.work });
+        workCount++;
+      }
+    }
+
+    // ---- Merge with any existing data already in those months, then write ONE blob per (category, month) ----
+    const blobKeys = Object.keys(blobs);
+    const BATCH_SIZE = 5;
+    let completed = 0;
+    for (let i = 0; i < blobKeys.length; i += BATCH_SIZE) {
+      const batchKeys = blobKeys.slice(i, i + BATCH_SIZE);
+      await Promise.all(batchKeys.map(async (cacheKey) => {
+        const sepIdx = cacheKey.indexOf(':') + 1;
+        const prefix = cacheKey.slice(0, sepIdx);
+        const monthVal = cacheKey.slice(sepIdx);
+        const existing = await getMonthBlob(prefix, monthVal);
+        const merged = Object.assign({}, existing, blobs[cacheKey]);
+        const result = await storageSetWithRetry(cacheKey, JSON.stringify(merged));
+        if (result.ok) monthBlobCache[cacheKey] = merged;
+        completed++;
+      }));
+      statusEl.textContent = `Restoring... ${completed} / ${blobKeys.length} month-records saved.`;
+    }
+
+    statusEl.textContent = `Restored ${weighInCount} weigh-ins, ${foodCount} food logs, ${workoutCount} workouts, ${healthCount} health entries, ${workCount} work entries (as ${blobKeys.length} month-blob writes). Note: Jul 8 and Jul 15 workouts (Back Squats etc.) could not be restored — only aggregate volume was in the CSV, not the original sets/reps/weight, so re-enter those manually if you want them exact. Refreshing dashboard views...`;
+
+    invalidateWeighInCache();
+    invalidateWorkCache();
+
+    await Promise.all([
+      loadDay(),
+      loadMonthSummary(),
+      renderWeighInTable(),
+      renderDashboardWeightChart(),
+      loadWorkMonth()
+    ]);
+
+    statusEl.textContent = `Restored ${weighInCount} weigh-ins, ${foodCount} food logs, ${workoutCount} workouts, ${healthCount} health entries, ${workCount} work entries. All views refreshed. Note: Jul 8 and Jul 15 workouts (Back Squats etc.) could not be restored — only aggregate volume was in the CSV, not the original sets/reps/weight, so re-enter those manually if you want them exact.`;
+  }
+
+  async function saveDay() {
+    const date = document.getElementById('ff-date').value;
+    if (!date) { document.getElementById('save-status').textContent = 'Date required.'; return; }
+    const totals = renderTotals();
+    const dayRecord = {
+      date,
+      fasting: document.getElementById('ff-fasting').checked,
+      isTrainingDay: document.getElementById('ff-training').checked,
+      items: currentItems,
+      totals
+    };
+    const result = await setDayInMonthBlob('food-log-month:', date, dayRecord);
+    if (result.ok) {
+      document.getElementById('save-status').textContent = 'Saved ' + date + ' — ' + currentItems.length + ' items, ' + Math.round(totals.kcal) + ' kcal.';
+    } else {
+      document.getElementById('save-status').textContent = 'Storage error: ' + result.error + ' — try again.';
+    }
+  }
+
+  async function loadDay() {
+    const date = document.getElementById('ff-date').value;
+    if (!date) return;
+    const rec = await getDayFromMonthBlob('food-log-month:', date);
+    if (rec) {
+      currentItems = rec.items || [];
+      document.getElementById('ff-fasting').checked = !!rec.fasting;
+      document.getElementById('ff-training').checked = !!rec.isTrainingDay;
+      document.getElementById('save-status').textContent = 'Loaded ' + date + '.';
+    } else {
+      currentItems = [];
+      document.getElementById('ff-fasting').checked = false;
+      document.getElementById('ff-training').checked = false;
+      document.getElementById('save-status').textContent = 'No entry yet for ' + date + ' — start logging.';
+    }
+    renderTable();
+    await refreshWorkoutCacheForDate(date);
+  }
+
+  function setupTabs() {
+    document.querySelectorAll('#food-root .tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('#food-root .tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('#food-root .panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+        if (tab.dataset.tab === 'dashboard') { loadMonthSummary(); renderDashboardWeightChart(); }
+      });
+    });
+  }
+
+  async function storageSetWithRetry(key, value, maxRetries = 3) {
+    let lastError = null;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const res = await window.storage.set(key, value, false);
+        if (!res) throw new Error('storage.set returned no result');
+        return { ok: true };
+      } catch (e) {
+        lastError = e;
+        const msg = (e && e.message) ? e.message.toLowerCase() : '';
+        const isRateLimit = msg.indexOf('rate limit') >= 0;
+        if (attempt < maxRetries) {
+          // Rate limits need real time to clear — back off much longer than a normal transient error.
+          const delay = isRateLimit ? 3000 * attempt : 300 * attempt;
+          await new Promise(r => setTimeout(r, delay));
+        }
+      }
+    }
+    return { ok: false, error: (lastError && lastError.message) ? lastError.message : String(lastError) };
+  }
+
+  async function storageGetWithRetry(key, maxRetries = 3) {
+    let lastError = null;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const r = await window.storage.get(key, false);
+        return { ok: true, value: r ? r.value : null };
+      } catch (e) {
+        lastError = e;
+        const msg = (e && e.message) ? e.message.toLowerCase() : '';
+        if (msg.indexOf('not found') >= 0) return { ok: true, value: null };
+        const isRateLimit = msg.indexOf('rate limit') >= 0;
+        if (attempt < maxRetries) {
+          const delay = isRateLimit ? 3000 * attempt : 300 * attempt;
+          await new Promise(r2 => setTimeout(r2, delay));
+        }
+      }
+    }
+    return { ok: false, error: (lastError && lastError.message) ? lastError.message : String(lastError) };
+  }
+
+  // ---- Month-consolidated storage ----
+  // Instead of one key per day (which means fetching 40+ individual records just to show
+  // history), each category stores ONE key per month containing all that month's days.
+  // This turns "N calls to load history" into "1 call per month touched."
+  const monthBlobCache = {};
+
+  async function getMonthBlob(prefix, monthVal, forceRefresh) {
+    const cacheKey = prefix + monthVal;
+    if (!forceRefresh && monthBlobCache[cacheKey]) return monthBlobCache[cacheKey];
+    const result = await storageGetWithRetry(cacheKey);
+    const blob = (result.ok && result.value) ? JSON.parse(result.value) : {};
+    monthBlobCache[cacheKey] = blob;
+    return blob;
+  }
+
+  async function setDayInMonthBlob(prefix, date, dayRecord) {
+    const monthVal = date.slice(0, 7);
+    const cacheKey = prefix + monthVal;
+    const blob = await getMonthBlob(prefix, monthVal);
+    blob[date] = dayRecord;
+    const result = await storageSetWithRetry(cacheKey, JSON.stringify(blob));
+    if (result.ok) monthBlobCache[cacheKey] = blob;
+    return result;
+  }
+
+  async function getDayFromMonthBlob(prefix, date) {
+    const monthVal = date.slice(0, 7);
+    const blob = await getMonthBlob(prefix, monthVal);
+    return blob[date] || null;
+  }
+
+  function invalidateMonthBlobCache(prefix, monthVal) {
+    if (monthVal) delete monthBlobCache[prefix + monthVal];
+    else Object.keys(monthBlobCache).forEach(k => { if (k.indexOf(prefix) === 0) delete monthBlobCache[k]; });
+  }
+
+  async function listAllMonthsForPrefix(prefix) {
+    try {
+      const list = await window.storage.list(prefix, false);
+      return (list && list.keys) ? list.keys.map(k => k.slice(prefix.length)) : [];
+    } catch (e) { return []; }
+  }
+
+  async function batchGetByPrefix(prefix) {
+    let results = [];
+    try {
+      const list = await window.storage.list(prefix, false);
+      const keys = (list && list.keys) ? list.keys : [];
+      const BATCH_SIZE = 5;
+      for (let i = 0; i < keys.length; i += BATCH_SIZE) {
+        const batch = keys.slice(i, i + BATCH_SIZE);
+        const batchResults = await Promise.all(batch.map(async (k) => {
+          try {
+            const r = await window.storage.get(k, false);
+            return r ? { key: k, value: JSON.parse(r.value) } : null;
+          } catch (e) { return null; }
+        }));
+        results = results.concat(batchResults.filter(Boolean));
+      }
+    } catch (e) {}
+    return results;
+  }
+
+  async function loadMonthSummary() {
+    const monthVal = document.getElementById('db-month').value; // "YYYY-MM"
+    if (!monthVal) return;
+    const foodBlob = await getMonthBlob('food-log-month:', monthVal);
+    let entries = Object.values(foodBlob);
+
+    document.getElementById('db-days-tag').textContent = entries.length + (entries.length === 1 ? ' day logged' : ' days logged');
+
+    const workoutMapForTdee = await getMonthBlob('workout-month:', monthVal);
+
+    await Promise.all([loadWorkoutAdherence(monthVal), renderWorkChart(monthVal)]);
+
+    if (!entries.length) {
+      ['db-protein-pct','db-carbs-pct','db-fat-pct','db-avg-kcal'].forEach(id => document.getElementById(id).textContent = '—');
+      document.getElementById('db-macro-grams-line').textContent = 'By grams: —';
+      document.getElementById('db-deficit-value').textContent = '—';
+      document.getElementById('db-deficit-note').textContent = 'No entries logged this month yet.';
+      document.getElementById('db-fasting-days').textContent = '—';
+      document.getElementById('db-fasting-total').textContent = '—';
+      return;
+    }
+
+    let sumKcal = 0, sumProtein = 0, sumCarbs = 0, sumFat = 0, sumDeficit = 0, fastingDays = 0, activityDays = 0;
+    entries.forEach(e => {
+      const t = e.totals || { kcal: 0, protein: 0, carbs: 0, fat: 0 };
+      sumKcal += t.kcal || 0;
+      sumProtein += t.protein || 0;
+      sumCarbs += t.carbs || 0;
+      sumFat += t.fat || 0;
+      const { tdee, source } = computeDayTdee(workoutMapForTdee[e.date], !!e.isTrainingDay);
+      if (source === 'activity') activityDays++;
+      sumDeficit += (tdee - (t.kcal || 0));
+      if (e.fasting) fastingDays++;
+    });
+
+    const proteinKcal = sumProtein * 4;
+    const carbsKcal = sumCarbs * 4;
+    const fatKcal = sumFat * 9;
+    const macroKcalTotal = proteinKcal + carbsKcal + fatKcal;
+
+    document.getElementById('db-protein-pct').textContent = macroKcalTotal ? Math.round(proteinKcal / macroKcalTotal * 100) + '%' : '—';
+    document.getElementById('db-carbs-pct').textContent = macroKcalTotal ? Math.round(carbsKcal / macroKcalTotal * 100) + '%' : '—';
+    document.getElementById('db-fat-pct').textContent = macroKcalTotal ? Math.round(fatKcal / macroKcalTotal * 100) + '%' : '—';
+    document.getElementById('db-avg-kcal').textContent = Math.round(sumKcal / entries.length);
+
+    const gramsTotal = sumProtein + sumCarbs + sumFat;
+    if (gramsTotal) {
+      const pG = Math.round(sumProtein / gramsTotal * 100);
+      const cG = Math.round(sumCarbs / gramsTotal * 100);
+      const fG = Math.round(sumFat / gramsTotal * 100);
+      document.getElementById('db-macro-grams-line').textContent = `By grams: Protein ${pG}% · Carbs ${cG}% · Fat ${fG}%`;
+    } else {
+      document.getElementById('db-macro-grams-line').textContent = 'By grams: —';
+    }
+
+    const valEl = document.getElementById('db-deficit-value');
+    const noteEl = document.getElementById('db-deficit-note');
+    noteEl.textContent = `Across ${entries.length} logged day${entries.length === 1 ? '' : 's'} · ${activityDays}/${entries.length} using real workout data · ${Math.round(sumDeficit / 7700 * 10) / 10} kg fat-equivalent`;
+    if (sumDeficit >= 0) {
+      valEl.textContent = '−' + Math.round(sumDeficit) + ' kcal';
+      valEl.className = 'deficit-value pos';
+    } else {
+      valEl.textContent = '+' + Math.round(Math.abs(sumDeficit)) + ' kcal';
+      valEl.className = 'deficit-value neg';
+    }
+
+    document.getElementById('db-fasting-days').textContent = fastingDays;
+    document.getElementById('db-fasting-total').textContent = entries.length;
+  }
+
+  async function loadWorkoutAdherence(monthVal) {
+    let workoutDates = new Set();
+    const blob = await getMonthBlob('workout-month:', monthVal);
+    Object.keys(blob).forEach(date => {
+      const rec = blob[date];
+      const hasEntries = rec.exercises && Object.values(rec.exercises).some(arr => arr && arr.length > 0);
+      if (hasEntries) workoutDates.add(date);
+    });
+
+    const [year, month] = monthVal.split('-').map(Number);
+    const daysInMonth = new Date(year, month, 0).getDate();
+    const loggedCount = workoutDates.size;
+    const pct = daysInMonth ? Math.round(loggedCount / daysInMonth * 100) : 0;
+
+    document.getElementById('db-workout-days-tag').textContent = monthVal;
+    document.getElementById('db-workout-days').textContent = loggedCount + ' / ' + daysInMonth;
+    document.getElementById('db-workout-pct').textContent = pct + '%';
+  }
+
+  function setupCanvasHiDPI(canvas, cssWidth, cssHeight) {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.style.width = cssWidth + 'px';
+    canvas.style.height = cssHeight + 'px';
+    canvas.width = Math.round(cssWidth * dpr);
+    canvas.height = Math.round(cssHeight * dpr);
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return ctx;
+  }
+
+  async function renderDashboardWeightChart() {
+    let entries = (await getAllWeighIns()).filter(e => e.weight != null);
+    entries.sort((a, b) => a.date.localeCompare(b.date));
+
+    const canvas = document.getElementById('db-weight-chart');
+    if (!canvas) return;
+    const cssWidth = canvas.parentElement.clientWidth || 600;
+    const cssHeight = 220;
+    const ctx = setupCanvasHiDPI(canvas, cssWidth, cssHeight);
+    ctx.clearRect(0, 0, cssWidth, cssHeight);
+    ctx.fillStyle = CHART_BG;
+    ctx.fillRect(0, 0, cssWidth, cssHeight);
+
+    if (!entries.length) {
+      ctx.fillStyle = CHART_TEXT;
+      ctx.font = '12px Inter, sans-serif';
+      ctx.fillText('No weigh-ins logged yet.', 10, 30);
+      return;
+    }
+
+    const padL = 42, padR = 14, padT = 14, padB = 34;
+    const plotW = cssWidth - padL - padR;
+    const plotH = cssHeight - padT - padB;
+
+    const weights = entries.map(e => e.weight);
+    const dataMin = Math.min(...weights, 90);
+    const dataMax = Math.max(...weights, 92);
+    const yMin = Math.floor((dataMin - 1) / 2) * 2;
+    const yMax = Math.ceil((dataMax + 1) / 2) * 2;
+    const yScale = v => padT + plotH - ((v - yMin) / (yMax - yMin)) * plotH;
+    const n = entries.length;
+    const xScale = i => padL + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW);
+
+    // Goal band 90-92
+    ctx.fillStyle = CHART_GOAL_BAND;
+    const bandTop = yScale(92), bandBottom = yScale(90);
+    ctx.fillRect(padL, bandTop, plotW, bandBottom - bandTop);
+
+    // Y gridlines + labels
+    ctx.strokeStyle = CHART_GRID;
+    ctx.fillStyle = CHART_TEXT;
+    ctx.font = '9px "IBM Plex Mono", monospace';
+    ctx.textAlign = 'right';
+    const ySteps = 5;
+    for (let i = 0; i <= ySteps; i++) {
+      const v = yMin + (i / ySteps) * (yMax - yMin);
+      const y = yScale(v);
+      ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + plotW, y); ctx.lineWidth = 0.5; ctx.stroke();
+      ctx.fillText(Math.round(v), padL - 6, y + 3);
+    }
+
+    // X labels (sparse)
+    ctx.fillStyle = CHART_TEXT;
+    ctx.textAlign = 'center';
+    const maxLabels = Math.min(8, n);
+    const step = Math.max(1, Math.round(n / maxLabels));
+    for (let i = 0; i < n; i += step) {
+      const d = entries[i].date.slice(5);
+      ctx.save();
+      ctx.translate(xScale(i), cssHeight - padB + 14);
+      ctx.rotate(-Math.PI / 5);
+      ctx.textAlign = 'right';
+      ctx.fillText(d, 0, 0);
+      ctx.restore();
+    }
+
+    // Weight line
+    ctx.strokeStyle = CHART_LINE;
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    entries.forEach((e, i) => {
+      const x = xScale(i), y = yScale(e.weight);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Points
+    ctx.fillStyle = CHART_LINE;
+    entries.forEach((e, i) => {
+      ctx.beginPath();
+      ctx.arc(xScale(i), yScale(e.weight), 2.3, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Axis title
+    ctx.fillStyle = CHART_TEXT;
+    ctx.font = '9px "IBM Plex Mono", monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('kg', 4, padT - 2);
+  }
+
+  async function renderWorkChart(monthVal) {
+    const totals = { spago: 0, futuresTrading: 0, stockPortfolio: 0, wealthManagement: 0, personalAdmin: 0 };
+    const entries = await getWorkMonthEntries(monthVal);
+    entries.forEach(rec => {
+      WORK_ITEMS.forEach(w => { totals[w.key] += (rec.hours && rec.hours[w.key]) || 0; });
+    });
+
+    const canvas = document.getElementById('db-work-chart');
+    if (!canvas) return;
+    const cssWidth = canvas.parentElement.clientWidth || 600;
+    const cssHeight = 200;
+    const ctx = setupCanvasHiDPI(canvas, cssWidth, cssHeight);
+    ctx.clearRect(0, 0, cssWidth, cssHeight);
+    ctx.fillStyle = CHART_BG;
+    ctx.fillRect(0, 0, cssWidth, cssHeight);
+
+    const values = WORK_ITEMS.map(w => Math.round(totals[w.key] * 100) / 100);
+    const maxVal = Math.max(...values, 1);
+
+    const padL = 32, padR = 10, padT = 14, padB = 46;
+    const plotW = cssWidth - padL - padR;
+    const plotH = cssHeight - padT - padB;
+    const n = WORK_ITEMS.length;
+    const slot = plotW / n;
+    const barWidth = slot * 0.55;
+
+    // Y gridlines
+    ctx.strokeStyle = CHART_GRID;
+    ctx.fillStyle = CHART_TEXT;
+    ctx.font = '9px "IBM Plex Mono", monospace';
+    ctx.textAlign = 'right';
+    const ySteps = 4;
+    for (let i = 0; i <= ySteps; i++) {
+      const v = (i / ySteps) * maxVal;
+      const y = padT + plotH - (v / maxVal) * plotH;
+      ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + plotW, y); ctx.lineWidth = 0.5; ctx.stroke();
+      ctx.fillText(Math.round(v * 10) / 10, padL - 6, y + 3);
+    }
+
+    // Bars
+    WORK_ITEMS.forEach((w, i) => {
+      const v = values[i];
+      const barH = (v / maxVal) * plotH;
+      const x = padL + i * slot + (slot - barWidth) / 2;
+      const y = padT + plotH - barH;
+      ctx.fillStyle = CHART_BAR;
+      ctx.fillRect(x, y, barWidth, barH);
+
+      // value label above bar
+      if (v > 0) {
+        ctx.fillStyle = CHART_TEXT;
+        ctx.font = '9px "IBM Plex Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(v + 'h', x + barWidth / 2, y - 4);
+      }
+
+      // x label (wrapped short)
+      ctx.fillStyle = CHART_TEXT;
+      ctx.font = '8px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      const label = w.label.replace(' Portfolio', '').replace(' Trading', '').replace(' Management', ' Mgmt').replace(' Administration', ' Admin');
+      const words = label.split(' ');
+      let line1 = words[0] || '';
+      let line2 = words.slice(1).join(' ');
+      ctx.fillText(line1, x + barWidth / 2, cssHeight - padB + 12);
+      if (line2) ctx.fillText(line2, x + barWidth / 2, cssHeight - padB + 22);
+    });
+  }
+
+  const HEALTH_ACTIVITIES = [
+    { key: 'sauna', label: 'Sauna' },
+    { key: 'coldShower', label: 'Cold shower' },
+    { key: 'stretching', label: 'Stretching' },
+    { key: 'deadHang', label: 'Dead hang' },
+    { key: 'stomachVacuum', label: 'Stomach vacuum' },
+    { key: 'redLight', label: 'Red light therapy' },
+    { key: 'supplements', label: 'Supplements' }
+  ];
+
+  function buildHealthList() {
+    const container = document.getElementById('health-list');
+    container.innerHTML = HEALTH_ACTIVITIES.map(a => `
+      <div class="checkline" style="font-size:13.5px;">
+        <input type="checkbox" id="hl-${a.key}"> <label for="hl-${a.key}" style="text-transform:none; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink);">${a.label}</label>
+      </div>
+    `).join('');
+  }
+
+  async function saveHealth() {
+    const date = document.getElementById('hl-date').value;
+    if (!date) { document.getElementById('health-status').textContent = 'Date required.'; return; }
+    const record = { date, activities: {} };
+    HEALTH_ACTIVITIES.forEach(a => {
+      record.activities[a.key] = document.getElementById('hl-' + a.key).checked;
+    });
+    const result = await setDayInMonthBlob('health-month:', date, record);
+    if (result.ok) {
+      document.getElementById('health-status').textContent = 'Saved ' + date + '.';
+    } else {
+      document.getElementById('health-status').textContent = 'Storage error: ' + result.error + ' — try again.';
+    }
+  }
+
+  async function loadHealth() {
+    const date = document.getElementById('hl-date').value;
+    if (!date) return;
+    const rec = await getDayFromMonthBlob('health-month:', date);
+    if (rec) {
+      HEALTH_ACTIVITIES.forEach(a => {
+        document.getElementById('hl-' + a.key).checked = !!(rec.activities && rec.activities[a.key]);
+      });
+      document.getElementById('health-status').textContent = 'Loaded ' + date + '.';
+    } else {
+      HEALTH_ACTIVITIES.forEach(a => { document.getElementById('hl-' + a.key).checked = false; });
+      document.getElementById('health-status').textContent = 'No entry yet for ' + date + '.';
+    }
+  }
+
+  const WORK_ITEMS = [
+    { key: 'spago', label: 'Spago' },
+    { key: 'futuresTrading', label: 'Futures trading' },
+    { key: 'stockPortfolio', label: 'Stock portfolio' },
+    { key: 'wealthManagement', label: 'Wealth management' },
+    { key: 'personalAdmin', label: 'Personal administration' }
+  ];
+
+  function buildWorkList() {
+    const container = document.getElementById('work-list');
+    container.innerHTML = WORK_ITEMS.map(w => `
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <label style="text-transform:none; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink);">${w.label}</label>
+        <input type="number" min="0" step="0.25" id="wr-${w.key}" placeholder="0.0" style="width:90px;">
+      </div>
+    `).join('');
+  }
+
+  async function saveWork() {
+    const date = document.getElementById('wr-date').value;
+    if (!date) { document.getElementById('work-status').textContent = 'Date required.'; return; }
+    const record = { date, hours: {} };
+    WORK_ITEMS.forEach(w => {
+      record.hours[w.key] = parseFloat(document.getElementById('wr-' + w.key).value) || 0;
+    });
+    const result = await setDayInMonthBlob('work-month:', date, record);
+    if (result.ok) {
+      document.getElementById('work-status').textContent = 'Saved ' + date + '.';
+      invalidateWorkCache();
+      await loadWorkMonth();
+    } else {
+      document.getElementById('work-status').textContent = 'Storage error: ' + result.error + ' — try again.';
+    }
+  }
+
+  async function loadWork() {
+    const date = document.getElementById('wr-date').value;
+    if (!date) return;
+    const rec = await getDayFromMonthBlob('work-month:', date);
+    if (rec) {
+      WORK_ITEMS.forEach(w => {
+        document.getElementById('wr-' + w.key).value = (rec.hours && rec.hours[w.key]) || '';
+      });
+      document.getElementById('work-status').textContent = 'Loaded ' + date + '.';
+    } else {
+      WORK_ITEMS.forEach(w => { document.getElementById('wr-' + w.key).value = ''; });
+      document.getElementById('work-status').textContent = 'No entry yet for ' + date + '.';
+    }
+  }
+
+  let cachedWorkMonth = { monthVal: null, entries: null };
+  async function getWorkMonthEntries(monthVal, forceRefresh) {
+    if (cachedWorkMonth.monthVal === monthVal && cachedWorkMonth.entries && !forceRefresh) return cachedWorkMonth.entries;
+    const blob = await getMonthBlob('work-month:', monthVal, forceRefresh);
+    cachedWorkMonth = { monthVal, entries: Object.values(blob) };
+    return cachedWorkMonth.entries;
+  }
+  function invalidateWorkCache() { cachedWorkMonth = { monthVal: null, entries: null }; invalidateMonthBlobCache('work-month:'); }
+
+  async function loadWorkMonth() {
+    const monthVal = document.getElementById('wr-month').value;
+    if (!monthVal) return;
+    let entries = await getWorkMonthEntries(monthVal);
+
+    document.getElementById('work-month-tag').textContent = entries.length + (entries.length === 1 ? ' day logged' : ' days logged');
+    const tableEl = document.getElementById('work-month-table');
+    if (!entries.length) {
+      tableEl.innerHTML = '<tr><td class="empty-note">No entries logged this month yet.</td></tr>';
+      return;
+    }
+    const totals = {};
+    WORK_ITEMS.forEach(w => totals[w.key] = 0);
+    entries.forEach(e => {
+      WORK_ITEMS.forEach(w => { totals[w.key] += (e.hours && e.hours[w.key]) || 0; });
+    });
+    let html = '<tr><th>Item</th><th>Total hours</th></tr>';
+    WORK_ITEMS.forEach(w => {
+      html += `<tr><td>${w.label}</td><td class="num">${Math.round(totals[w.key] * 100) / 100}</td></tr>`;
+    });
+    tableEl.innerHTML = html;
+  }
+
+  const EXERCISES = [
+    { key: 'backsquat',  label: 'Back Squats',          type: 'volume' },
+    { key: 'deadlift',   label: 'Deadlift',              type: 'volume' },
+    { key: 'row',        label: 'Seated Row',            type: 'volume' },
+    { key: 'bicepHandle',label: 'Bicep Curl (handle)',   type: 'volume', weightUnit: 'lbs' },
+    { key: 'bicepRope',  label: 'Bicep Curl (rope)',     type: 'volume' },
+    { key: 'tricepRope', label: 'Tricep (rope)',         type: 'volume' },
+    { key: 'tricepBar',  label: 'Tricep (bar)',          type: 'volume' },
+    { key: 'pullup',     label: 'Pull-ups',              type: 'pullup' },
+    { key: 'chinup',     label: 'Chin-ups',              type: 'pullup' },
+    { key: 'cablePullDown', label: 'Cable Pull Down',     type: 'volume' },
+    { key: 'rearDelt',   label: 'Rear Deltoid Machine',   type: 'volume' },
+    { key: 'legPress',   label: 'Leg Press',              type: 'volume' },
+    { key: 'backExt',    label: 'Back Extensions',        type: 'setsreps' },
+    { key: 'pushup',     label: 'Push-ups',               type: 'setsreps_mod' },
+    { key: 'kbSwing',    label: 'Kettlebell Swings',      type: 'volume' },
+    { key: 'walk',       label: 'Walk',                   type: 'distance' },
+    { key: 'hiit',       label: 'HIIT',                   type: 'freetext' }
+  ];
+
+  let workoutData = {}; // { exKey: [ {sets, reps, weight} ] }
+
+  function emptyWorkoutData() {
+    const obj = {};
+    EXERCISES.forEach(ex => obj[ex.key] = []);
+    return obj;
+  }
+  workoutData = emptyWorkoutData();
+
+  function populateWorkoutSelect() {
+    const sel = document.getElementById('wk-item');
+    sel.innerHTML = EXERCISES.map(ex => `<option value="${ex.key}">${ex.label}</option>`).join('');
+    updateWorkoutFields();
+  }
+
+  function updateWorkoutFields() {
+    const key = document.getElementById('wk-item').value;
+    const ex = EXERCISES.find(e => e.key === key);
+    const showSetsReps = ex.type === 'volume' || ex.type === 'pullup' || ex.type === 'setsreps' || ex.type === 'setsreps_mod';
+    const showWeight = ex.type === 'volume' || ex.type === 'pullup';
+    const showBodyweight = ex.type === 'pullup';
+    const showMods = ex.type === 'setsreps_mod';
+    const showDistance = ex.type === 'distance';
+    const showHiit = ex.type === 'freetext';
+
+    document.querySelectorAll('.wk-field-setsreps').forEach(el => el.style.display = showSetsReps ? '' : 'none');
+    document.querySelectorAll('.wk-field-weight').forEach(el => el.style.display = showWeight ? '' : 'none');
+    document.querySelectorAll('.wk-field-bodyweight').forEach(el => el.style.display = showBodyweight ? '' : 'none');
+    document.querySelectorAll('.wk-field-mods').forEach(el => el.style.display = showMods ? 'flex' : 'none');
+    document.querySelectorAll('.wk-field-distance').forEach(el => el.style.display = showDistance ? '' : 'none');
+    document.querySelectorAll('.wk-field-hiit').forEach(el => el.style.display = showHiit ? '' : 'none');
+
+    const unit = ex.weightUnit || 'kg';
+    if (ex.type === 'pullup') {
+      document.getElementById('wk-weight-label').textContent = 'Added weight (kg)';
+      const bwCheckbox = document.getElementById('wk-bodyweight');
+      const weightInput = document.getElementById('wk-weight');
+      weightInput.disabled = bwCheckbox.checked;
+      if (bwCheckbox.checked) weightInput.value = '';
+    } else {
+      document.getElementById('wk-weight-label').textContent = 'Weight (' + unit + ')';
+      document.getElementById('wk-weight').disabled = false;
+    }
+  }
+
+  function exerciseTotalVolume(key) {
+    const ex = EXERCISES.find(e => e.key === key);
+    return workoutData[key].reduce((acc, s) => acc + (s.sets * s.reps * s.weight), 0);
+  }
+
+  function exercisePullupBreakdown(key) {
+    const byWeight = {};
+    workoutData[key].forEach(s => {
+      const label = s.bodyweight ? 'Bodyweight' : ('+' + s.weight + 'kg');
+      byWeight[label] = (byWeight[label] || 0) + (s.sets * s.reps);
+    });
+    return byWeight;
+  }
+
+  function modBadges(s) {
+    const tags = [];
+    if (s.rings) tags.push('Rings');
+    if (s.decline) tags.push('Decline');
+    if (s.parallettes) tags.push('Parallettes');
+    return tags.join('+');
+  }
+
+  function renderWorkoutLog() {
+    const tableEl = document.getElementById('wk-log-table');
+    let rows = [];
+    EXERCISES.forEach(ex => {
+      workoutData[ex.key].forEach((s, idx) => {
+        rows.push({ ex, s, idx });
+      });
+    });
+    document.getElementById('wk-count-tag').textContent = rows.length + (rows.length === 1 ? ' set' : ' sets');
+    if (!rows.length) {
+      tableEl.innerHTML = '<tr><td class="empty-note">No sets logged yet — add one above.</td></tr>';
+      return;
+    }
+    let html = '<tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Weight</th><th>Volume</th><th></th></tr>';
+    rows.forEach(({ ex, s, idx }) => {
+      let setsCell, repsCell, weightCell, volumeCell;
+      const unit = ex.weightUnit || 'kg';
+      if (ex.type === 'distance') {
+        setsCell = '—'; repsCell = '—'; weightCell = '—';
+        volumeCell = s.km + ' km';
+      } else if (ex.type === 'freetext') {
+        setsCell = '—'; repsCell = '—';
+        weightCell = s.minutes ? s.minutes + ' min' : '—';
+        volumeCell = s.desc;
+      } else if (ex.type === 'setsreps') {
+        setsCell = s.sets; repsCell = s.reps; weightCell = '—';
+        volumeCell = (s.sets * s.reps) + ' reps';
+      } else if (ex.type === 'setsreps_mod') {
+        setsCell = s.sets; repsCell = s.reps;
+        weightCell = modBadges(s) || '—';
+        volumeCell = (s.sets * s.reps) + ' reps';
+      } else if (ex.type === 'pullup') {
+        setsCell = s.sets; repsCell = s.reps;
+        weightCell = s.bodyweight ? 'Bodyweight' : ('+' + s.weight + ' kg');
+        volumeCell = (s.sets * s.reps) + ' reps';
+      } else {
+        setsCell = s.sets; repsCell = s.reps; weightCell = s.weight + ' ' + unit;
+        volumeCell = Math.round(s.sets * s.reps * s.weight) + ' ' + unit;
+      }
+      html += `<tr>
+        <td>${ex.label}</td>
+        <td class="num">${setsCell}</td>
+        <td class="num">${repsCell}</td>
+        <td class="num">${weightCell}</td>
+        <td class="num">${volumeCell}</td>
+        <td><button class="ghost" onclick="window.__wkRemove('${ex.key}', ${idx})">remove</button></td>
+      </tr>`;
+    });
+    tableEl.innerHTML = html;
+  }
+
+  function renderWorkoutTotals() {
+    const tableEl = document.getElementById('wk-totals-table');
+    const logged = EXERCISES.filter(ex => workoutData[ex.key].length > 0);
+    if (!logged.length) {
+      tableEl.innerHTML = '<tr><td class="empty-note">Nothing logged yet.</td></tr>';
+      return;
+    }
+    let html = '<tr><th>Exercise</th><th>Total</th></tr>';
+    logged.forEach(ex => {
+      let totalDisplay;
+      const unit = ex.weightUnit || 'kg';
+      if (ex.type === 'pullup') {
+        const breakdown = exercisePullupBreakdown(ex.key);
+        totalDisplay = Object.keys(breakdown).map(w => `${breakdown[w]} reps @ ${w}`).join(' · ');
+      } else if (ex.type === 'distance') {
+        const totalKm = workoutData[ex.key].reduce((acc, s) => acc + s.km, 0);
+        totalDisplay = Math.round(totalKm * 10) / 10 + ' km total';
+      } else if (ex.type === 'freetext') {
+        const count = workoutData[ex.key].length;
+        const totalMin = workoutData[ex.key].reduce((acc, s) => acc + (s.minutes || 0), 0);
+        totalDisplay = `${count} session${count === 1 ? '' : 's'} · ${totalMin} min total`;
+      } else if (ex.type === 'setsreps' || ex.type === 'setsreps_mod') {
+        const totalReps = workoutData[ex.key].reduce((acc, s) => acc + (s.sets * s.reps), 0);
+        totalDisplay = totalReps + ' reps total';
+      } else {
+        totalDisplay = Math.round(exerciseTotalVolume(ex.key)) + ' ' + unit + ' total';
+      }
+      html += `<tr><td>${ex.label}</td><td class="num">${totalDisplay}</td></tr>`;
+    });
+    tableEl.innerHTML = html;
+  }
+
+  function renderWorkout() {
+    renderWorkoutLog();
+    renderWorkoutTotals();
+  }
+
+  function addSet() {
+    const key = document.getElementById('wk-item').value;
+    const ex = EXERCISES.find(e => e.key === key);
+
+    if (ex.type === 'distance') {
+      const km = parseFloat(document.getElementById('wk-km').value) || 0;
+      if (!km) return;
+      workoutData[key].push({ km });
+      document.getElementById('wk-km').value = '';
+    } else if (ex.type === 'freetext') {
+      const desc = document.getElementById('wk-hiit-desc').value.trim();
+      const minutes = parseFloat(document.getElementById('wk-hiit-time').value) || 0;
+      if (!desc) return;
+      workoutData[key].push({ desc, minutes });
+      document.getElementById('wk-hiit-desc').value = '';
+      document.getElementById('wk-hiit-time').value = '';
+    } else if (ex.type === 'setsreps') {
+      const sets = parseFloat(document.getElementById('wk-sets').value) || 0;
+      const reps = parseFloat(document.getElementById('wk-reps').value) || 0;
+      if (!sets || !reps) return;
+      workoutData[key].push({ sets, reps });
+      document.getElementById('wk-reps').value = '';
+    } else if (ex.type === 'setsreps_mod') {
+      const sets = parseFloat(document.getElementById('wk-sets').value) || 0;
+      const reps = parseFloat(document.getElementById('wk-reps').value) || 0;
+      if (!sets || !reps) return;
+      workoutData[key].push({
+        sets, reps,
+        rings: document.getElementById('wk-mod-rings').checked,
+        decline: document.getElementById('wk-mod-decline').checked,
+        parallettes: document.getElementById('wk-mod-parallettes').checked
+      });
+      document.getElementById('wk-reps').value = '';
+      document.getElementById('wk-mod-rings').checked = false;
+      document.getElementById('wk-mod-decline').checked = false;
+      document.getElementById('wk-mod-parallettes').checked = false;
+    } else if (ex.type === 'pullup') {
+      const sets = parseFloat(document.getElementById('wk-sets').value) || 0;
+      const reps = parseFloat(document.getElementById('wk-reps').value) || 0;
+      const bodyweight = document.getElementById('wk-bodyweight').checked;
+      const weight = bodyweight ? 0 : (parseFloat(document.getElementById('wk-weight').value) || 0);
+      if (!sets || !reps) return;
+      workoutData[key].push({ sets, reps, bodyweight, weight });
+      document.getElementById('wk-reps').value = '';
+      document.getElementById('wk-weight').value = '';
+    } else {
+      const sets = parseFloat(document.getElementById('wk-sets').value) || 0;
+      const reps = parseFloat(document.getElementById('wk-reps').value) || 0;
+      const weight = parseFloat(document.getElementById('wk-weight').value) || 0;
+      if (!sets || !reps) return;
+      workoutData[key].push({ sets, reps, weight });
+      document.getElementById('wk-reps').value = '';
+      document.getElementById('wk-weight').value = '';
+    }
+    renderWorkout();
+  }
+
+  window.__wkRemove = function(key, idx) {
+    workoutData[key].splice(idx, 1);
+    renderWorkout();
+  };
+
+  async function saveWorkout() {
+    const date = document.getElementById('wk-date').value;
+    if (!date) { document.getElementById('workout-status').textContent = 'Date required.'; return; }
+    const result = await setDayInMonthBlob('workout-month:', date, { date, exercises: workoutData });
+    if (result.ok) {
+      document.getElementById('workout-status').textContent = 'Saved ' + date + '.';
+      if (document.getElementById('ff-date').value === date) {
+        await refreshWorkoutCacheForDate(date);
+      }
+    } else {
+      document.getElementById('workout-status').textContent = 'Storage error: ' + result.error + ' — try again.';
+    }
+  }
+
+  async function loadWorkout() {
+    const date = document.getElementById('wk-date').value;
+    if (!date) return;
+    const rec = await getDayFromMonthBlob('workout-month:', date);
+    if (rec) {
+      workoutData = rec.exercises || emptyWorkoutData();
+      document.getElementById('workout-status').textContent = 'Loaded ' + date + '.';
+    } else {
+      workoutData = emptyWorkoutData();
+      document.getElementById('workout-status').textContent = 'No entry yet for ' + date + '.';
+    }
+    renderWorkout();
+  }
+
+  async function saveWeighIn() {
+    const date = document.getElementById('wi-date').value;
+    if (!date) { document.getElementById('weighin-status').textContent = 'Date required.'; return; }
+    const record = {
+      date,
+      weight: parseFloat(document.getElementById('wi-weight').value) || null,
+      bf: parseFloat(document.getElementById('wi-bf').value) || null,
+      muscle: parseFloat(document.getElementById('wi-muscle').value) || null,
+      water: parseFloat(document.getElementById('wi-water').value) || null
+    };
+    const result = await setDayInMonthBlob('weigh-in-month:', date, record);
+    if (result.ok) {
+      document.getElementById('weighin-status').textContent = 'Saved ' + date + '.';
+      invalidateWeighInCache();
+      await renderWeighInTable();
+    } else {
+      document.getElementById('weighin-status').textContent = 'Storage error: ' + result.error + ' — try again.';
+    }
+  }
+
+  async function loadWeighIn() {
+    const date = document.getElementById('wi-date').value;
+    if (!date) return;
+    const rec = await getDayFromMonthBlob('weigh-in-month:', date);
+    if (rec) {
+      document.getElementById('wi-weight').value = rec.weight ?? '';
+      document.getElementById('wi-bf').value = rec.bf ?? '';
+      document.getElementById('wi-muscle').value = rec.muscle ?? '';
+      document.getElementById('wi-water').value = rec.water ?? '';
+      document.getElementById('weighin-status').textContent = 'Loaded ' + date + '.';
+    } else {
+      document.getElementById('wi-weight').value = '';
+      document.getElementById('wi-bf').value = '';
+      document.getElementById('wi-muscle').value = '';
+      document.getElementById('wi-water').value = '';
+      document.getElementById('weighin-status').textContent = 'No entry yet for ' + date + '.';
+    }
+  }
+
+  let cachedWeighIns = null;
+  async function getAllWeighIns(forceRefresh) {
+    if (cachedWeighIns && !forceRefresh) return cachedWeighIns;
+    const months = await listAllMonthsForPrefix('weigh-in-month:');
+    const blobs = await Promise.all(months.map(m => getMonthBlob('weigh-in-month:', m, forceRefresh)));
+    let entries = [];
+    blobs.forEach(blob => { entries = entries.concat(Object.values(blob)); });
+    cachedWeighIns = entries;
+    return cachedWeighIns;
+  }
+  function invalidateWeighInCache() { cachedWeighIns = null; invalidateMonthBlobCache('weigh-in-month:'); }
+
+  async function renderWeighInTable() {
+    const el = document.getElementById('weighin-table');
+    let entries = (await getAllWeighIns()).slice();
+    entries.sort((a, b) => b.date.localeCompare(a.date));
+    entries = entries.slice(0, 10);
+    if (!entries.length) { el.innerHTML = '<tr><td class="empty-note">No weigh-ins logged yet.</td></tr>'; return; }
+    let html = '<tr><th>Date</th><th>Weight</th><th>Body fat</th><th>Muscle</th><th>Water</th></tr>';
+    entries.forEach(e => {
+      html += `<tr>
+        <td>${e.date}</td>
+        <td class="num">${e.weight ? e.weight + ' kg' : '—'}</td>
+        <td class="num">${e.bf ? e.bf + '%' : '—'}</td>
+        <td class="num">${e.muscle ? e.muscle + ' kg' : '—'}</td>
+        <td class="num">${e.water ? e.water + '%' : '—'}</td>
+      </tr>`;
+    });
+    el.innerHTML = html;
+  }
+
+  function downloadFile(filename, content, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function csvEscape(val) {
+    if (val === null || val === undefined) return '';
+    const s = String(val);
+    if (s.indexOf(',') >= 0 || s.indexOf('"') >= 0 || s.indexOf('\n') >= 0) {
+      return '"' + s.replace(/"/g, '""') + '"';
+    }
+    return s;
+  }
+
+  async function exportMonthCSV() {
+    const statusEl = document.getElementById('export-status');
+    const monthVal = document.getElementById('db-month').value;
+    if (!monthVal) { statusEl.textContent = 'Pick a month first.'; return; }
+    statusEl.textContent = 'Compiling ' + monthVal + '...';
+
+    const [foodMap, weighMap, workoutMap, healthMap, workMap] = await Promise.all([
+      getMonthBlob('food-log-month:', monthVal), getMonthBlob('weigh-in-month:', monthVal), getMonthBlob('workout-month:', monthVal),
+      getMonthBlob('health-month:', monthVal), getMonthBlob('work-month:', monthVal)
+    ]);
+
+    const allDates = Array.from(new Set([
+      ...Object.keys(foodMap), ...Object.keys(weighMap), ...Object.keys(workoutMap),
+      ...Object.keys(healthMap), ...Object.keys(workMap)
+    ])).sort();
+
+    if (!allDates.length) { statusEl.textContent = 'No data found for ' + monthVal + '.'; return; }
+
+    const headers = [
+      'Date', 'Weight (kg)', 'Body Fat %', 'Muscle (kg)', 'Water %',
+      'Calories', 'Protein (g)', 'Carbs (g)', 'Fat (g)', 'TDEE Est.', 'TDEE Source', 'Deficit/Surplus',
+      '18:6 Fasting', 'Training Day',
+      'Workout Volume Summary',
+      'Health: Sauna', 'Health: Cold Shower', 'Health: Stretching', 'Health: Dead Hang', 'Health: Stomach Vacuum', 'Health: Red Light', 'Health: Supplements',
+      'Work: Spago (h)', 'Work: Futures Trading (h)', 'Work: Stock Portfolio (h)', 'Work: Wealth Mgmt (h)', 'Work: Personal Admin (h)'
+    ];
+
+    const rows = [headers];
+
+    allDates.forEach(date => {
+      const w = weighMap[date] || {};
+      const f = foodMap[date] || {};
+      const t = f.totals || {};
+      const isTraining = !!f.isTrainingDay;
+      const { tdee, source } = computeDayTdee(workoutMap[date], isTraining);
+      const deficit = t.kcal ? (tdee - t.kcal) : '';
+      const h = (healthMap[date] || {}).activities || {};
+      const wk = workMap[date] || {};
+      const wh = wk.hours || {};
+
+      let workoutSummary = '';
+      const wo = workoutMap[date];
+      if (wo && wo.exercises) {
+        const parts = [];
+        EXERCISES.forEach(ex => {
+          const entries = wo.exercises[ex.key] || [];
+          if (!entries.length) return;
+          const unit = ex.weightUnit || 'kg';
+          if (ex.type === 'pullup') {
+            const byW = {};
+            entries.forEach(s => {
+              const label = s.bodyweight ? 'BW' : ('+' + s.weight + 'kg');
+              byW[label] = (byW[label] || 0) + (s.sets * s.reps);
+            });
+            parts.push(ex.label + ': ' + Object.keys(byW).map(k => byW[k] + 'reps@' + k).join('+'));
+          } else if (ex.type === 'distance') {
+            const totalKm = entries.reduce((a, s) => a + s.km, 0);
+            parts.push(ex.label + ': ' + Math.round(totalKm * 10) / 10 + 'km');
+          } else if (ex.type === 'freetext') {
+            const totalMin = entries.reduce((a, s) => a + (s.minutes || 0), 0);
+            parts.push(ex.label + ': ' + entries.length + 'x/' + totalMin + 'min');
+          } else if (ex.type === 'setsreps' || ex.type === 'setsreps_mod') {
+            const totalReps = entries.reduce((a, s) => a + (s.sets * s.reps), 0);
+            parts.push(ex.label + ': ' + totalReps + 'reps');
+          } else {
+            const vol = entries.reduce((a, s) => a + (s.sets * s.reps * s.weight), 0);
+            parts.push(ex.label + ': ' + Math.round(vol) + unit);
+          }
+        });
+        workoutSummary = parts.join(' | ');
+      }
+
+      rows.push([
+        date, w.weight ?? '', w.bf ?? '', w.muscle ?? '', w.water ?? '',
+        t.kcal ?? '', t.protein ?? '', t.carbs ?? '', t.fat ?? '', tdee, source, deficit,
+        f.fasting ? 'Yes' : 'No', isTraining ? 'Yes' : 'No',
+        workoutSummary,
+        h.sauna ? 'Yes' : '', h.coldShower ? 'Yes' : '', h.stretching ? 'Yes' : '', h.deadHang ? 'Yes' : '', h.stomachVacuum ? 'Yes' : '', h.redLight ? 'Yes' : '', h.supplements ? 'Yes' : '',
+        wh.spago || '', wh.futuresTrading || '', wh.stockPortfolio || '', wh.wealthManagement || '', wh.personalAdmin || ''
+      ]);
+    });
+
+    const csv = rows.map(r => r.map(csvEscape).join(',')).join('\n');
+    downloadFile('phase2_life_tracker_' + monthVal + '.csv', csv, 'text/csv');
+    statusEl.textContent = 'Exported ' + allDates.length + ' day(s) for ' + monthVal + '.';
+  }
+
+  async function importBackup() {
+    const statusEl = document.getElementById('import-status');
+    const raw = document.getElementById('import-json-text').value.trim();
+    if (!raw) { statusEl.textContent = 'Paste backup JSON first.'; return; }
+    let backup;
+    try {
+      backup = JSON.parse(raw);
+    } catch (e) {
+      statusEl.textContent = 'Could not parse JSON — check you pasted the full backup export.';
+      return;
+    }
+    const keys = Object.keys(backup);
+    if (!keys.length) { statusEl.textContent = 'No records found in pasted JSON.'; return; }
+
+    statusEl.textContent = 'Importing ' + keys.length + ' records...';
+    let count = 0;
+    const BATCH_SIZE = 5;
+    for (let i = 0; i < keys.length; i += BATCH_SIZE) {
+      const batch = keys.slice(i, i + BATCH_SIZE);
+      await Promise.all(batch.map(async (k) => {
+        try {
+          await window.storage.set(k, JSON.stringify(backup[k]), false);
+          count++;
+        } catch (e) {}
+      }));
+      statusEl.textContent = `Importing... ${count} / ${keys.length} records saved.`;
+    }
+    statusEl.textContent = 'Imported ' + count + ' of ' + keys.length + ' records. Refreshing dashboard views...';
+    document.getElementById('import-json-text').value = '';
+
+    Object.keys(monthBlobCache).forEach(k => delete monthBlobCache[k]);
+    invalidateWeighInCache();
+    invalidateWorkCache();
+
+    await Promise.all([
+      loadDay(),
+      loadMonthSummary(),
+      renderWeighInTable(),
+      renderDashboardWeightChart(),
+      loadWorkMonth()
+    ]);
+
+    statusEl.textContent = 'Imported ' + count + ' of ' + keys.length + ' records. All views refreshed.';
+  }
+
+  async function exportAllJSON() {
+    const statusEl = document.getElementById('export-status');
+    statusEl.textContent = 'Compiling full backup...';
+    const backup = {};
+    const all = await batchGetByPrefix('');
+    all.forEach(({ key, value }) => { backup[key] = value; });
+    downloadFile('phase2_life_tracker_full_backup_' + todayStr() + '.json', JSON.stringify(backup, null, 2), 'application/json');
+    statusEl.textContent = 'Exported full backup — ' + Object.keys(backup).length + ' records.';
+  }
+
+  function init() {
+    document.getElementById('ff-date').value = todayStr();
+    document.getElementById('wi-date').value = todayStr();
+    document.getElementById('wk-date').value = todayStr();
+    document.getElementById('hl-date').value = todayStr();
+    document.getElementById('wr-date').value = todayStr();
+    document.getElementById('wr-month').value = todayStr().slice(0, 7);
+    const monthName = new Date().toLocaleString('en-US', { month: 'long' });
+    document.getElementById('header-eyebrow').textContent = monthName + ' - Phase 2 Life Tracker';
+    document.getElementById('db-month').value = todayStr().slice(0, 7);
+    populateSelect();
+    setupAdd();
+    setupTabs();
+    populateWorkoutSelect();
+    renderWorkout();
+    document.getElementById('wk-item').addEventListener('change', updateWorkoutFields);
+    document.getElementById('wk-bodyweight').addEventListener('change', updateWorkoutFields);
+    document.getElementById('btn-add-set').addEventListener('click', addSet);
+    buildHealthList();
+    document.getElementById('btn-save-health').addEventListener('click', saveHealth);
+    document.getElementById('btn-load-health').addEventListener('click', loadHealth);
+    buildWorkList();
+    document.getElementById('btn-save-work').addEventListener('click', saveWork);
+    document.getElementById('btn-load-work').addEventListener('click', loadWork);
+    document.getElementById('btn-load-work-month').addEventListener('click', loadWorkMonth);
+    loadWorkMonth();
+    document.getElementById('btn-export-month-csv').addEventListener('click', exportMonthCSV);
+    document.getElementById('btn-export-all-json').addEventListener('click', exportAllJSON);
+    document.getElementById('btn-import-backup').addEventListener('click', importBackup);
+    document.getElementById('btn-restore-history').addEventListener('click', restoreFullHistory);
+    document.getElementById('btn-save-day').addEventListener('click', saveDay);
+    document.getElementById('btn-load-day').addEventListener('click', loadDay);
+    document.getElementById('ff-date').addEventListener('change', () => refreshWorkoutCacheForDate(document.getElementById('ff-date').value));
+    document.getElementById('btn-load-month').addEventListener('click', loadMonthSummary);
+    document.getElementById('btn-save-weighin').addEventListener('click', saveWeighIn);
+    document.getElementById('btn-load-weighin').addEventListener('click', loadWeighIn);
+    document.getElementById('btn-save-workout').addEventListener('click', saveWorkout);
+    document.getElementById('btn-load-workout').addEventListener('click', loadWorkout);
+    renderTable();
+    refreshWorkoutCacheForDate(document.getElementById('ff-date').value);
+    renderWeighInTable();
+    loadMonthSummary();
+    renderDashboardWeightChart();
+  }
+
+  init();
+})();
+</script>
